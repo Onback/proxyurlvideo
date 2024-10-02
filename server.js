@@ -2,7 +2,7 @@ const express = require('express');
 const request = require('request');
 const app = express();
 
-// Route to stream the video
+// Route to stream the video with optimized buffer handling
 app.get('/proxy-download', (req, res) => {
     const videoUrl = req.query.url; // The video URL to stream
 
@@ -31,7 +31,7 @@ app.get('/proxy-download', (req, res) => {
                     'Accept-Ranges': 'bytes'
                 });
             })
-            .pipe(res)
+            .pipe(res, { end: true })
             .on('error', (err) => {
                 console.error('Error streaming video:', err);
                 res.status(500).send('Error streaming video');
@@ -57,7 +57,7 @@ app.get('/proxy-download', (req, res) => {
                     'Accept-Ranges': 'bytes'
                 });
             })
-            .pipe(res)
+            .pipe(res, { end: true })
             .on('error', (err) => {
                 console.error('Error streaming full video:', err);
                 res.status(500).send('Error streaming full video');
